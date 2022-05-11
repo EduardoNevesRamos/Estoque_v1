@@ -10,7 +10,11 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 	{
 		products := main.Group("products")
 		{
-			products.GET("/", controllers.GetAllproducts)
+			products.GET("/", controllers.GetAllProducts)
+			products.GET("/:id", controllers.GetProduct)
+			products.POST("/", controllers.CreateProducts)
+			products.PUT("/:id", controllers.UpdateProducts)
+			products.DELETE("/:id", controllers.DeleteProducts)
 		}
 	}
 

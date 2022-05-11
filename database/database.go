@@ -12,7 +12,7 @@ import (
 var db *gorm.DB
 
 func StartDB() {
-	str := "root:123456@tcp(127.0.0.1:3306)/estoque?parseTime=true"
+	str := "eduardo:123456@tcp(localhost:3306)/estoque?parseTime=true&loc=Local"
 	database, err := gorm.Open(mysql.Open(str), &gorm.Config{})
 
 	if err != nil {
