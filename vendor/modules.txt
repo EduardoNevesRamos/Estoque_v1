@@ -1,10 +1,8 @@
 # github.com/DuduNeves/api-Games v0.0.0-20220411140151-98a4feff762e
 ## explicit; go 1.17
-github.com/DuduNeves/api-Games/controllers
-github.com/DuduNeves/api-Games/database
-github.com/DuduNeves/api-Games/database/migrations
-github.com/DuduNeves/api-Games/models
-github.com/DuduNeves/api-Games/server/routes
+# github.com/dgrijalva/jwt-go v3.2.0+incompatible
+## explicit
+github.com/dgrijalva/jwt-go
 # github.com/gin-contrib/sse v0.1.0
 ## explicit; go 1.12
 github.com/gin-contrib/sse
