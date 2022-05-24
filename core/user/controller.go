@@ -1,14 +1,16 @@
-package controllers
+package user
 
 import (
 	"strconv"
 
 	"github.com/DuduNeves/Estoque_v1/database"
-	"github.com/DuduNeves/Estoque_v1/models"
+	"github.com/DuduNeves/Estoque_v1/database/entity"
+	"github.com/DuduNeves/Estoque_v1/util/authorization"
+
 	"github.com/gin-gonic/gin"
 )
 
-func GetProduct(ctx *gin.Context) {
+func GetUser(ctx *gin.Context) {
 	id := ctx.Param("id")
 	parseId, err := strconv.Atoi(id)
 
@@ -20,49 +22,50 @@ func GetProduct(ctx *gin.Context) {
 	}
 
 	db := database.GetDatabase()
-	product := models.Products{}
+	user := entity.User{}
 
-	err = db.First(&product, parseId).Error
+	err = db.First(&user, parseId).Error
 	if err != nil {
 		ctx.JSON(400, gin.H{
-			"Error:": "Can't find a product" + err.Error(),
+			"Error:": "Can't find a user" + err.Error(),
 		})
 		return
 	}
 
-	ctx.JSON(200, product)
+	ctx.JSON(200, user)
 }
 
-func GetAllProducts(ctx *gin.Context) {
-
+func GetAllUsers(ctx *gin.Context) {
 	db := database.GetDatabase()
-	product := []models.Products{}
+	user := []entity.User{}
 
-	err := db.Find(&product).Error
+	err := db.Find(&user).Error
 	if err != nil {
 		ctx.JSON(400, gin.H{
-			"Error:": "Can't find products by id: " + err.Error(),
+			"Error:": "Can't find user by id: " + err.Error(),
 		})
 
 		return
 	}
 
-	ctx.JSON(200, product)
+	ctx.JSON(200, user)
 }
 
-func CreateProducts(ctx *gin.Context) {
+func CreateUser(ctx *gin.Context) {
 	db := database.GetDatabase()
 
-	product := &models.Products{}
+	user := &entity.User{}
 
-	err := ctx.ShouldBindJSON(product)
+	err := ctx.ShouldBindJSON(user)
 	if err != nil {
 		ctx.JSON(400, gin.H{
 			"Error:": "Can't bind JSON" + err.Error(),
 		})
 	}
 
-	err = db.Create(product).Error
+	user.Password = authorization.SHA256Enconder(user.Password)
+
+	err = db.Create(user).Error
 	if err != nil {
 		ctx.JSON(400, gin.H{
 			"Error:": "Can't create product" + err.Error(),
@@ -71,38 +74,38 @@ func CreateProducts(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(200, product)
+	ctx.JSON(200, user)
 }
 
-func UpdateProducts(ctx *gin.Context) {
+func UpdateUser(ctx *gin.Context) {
 	db := database.GetDatabase()
 
-	product := &models.Products{}
+	user := &entity.User{}
 
-	err := ctx.ShouldBindJSON(product)
+	err := ctx.ShouldBindJSON(user)
 	if err != nil {
 		ctx.JSON(400, gin.H{
 			"Error:": "Can't bind JSON" + err.Error(),
 		})
 	}
 
-	err = db.Save(product).Error
+	err = db.Save(user).Error
 	if err != nil {
 		ctx.JSON(400, gin.H{
-			"Error:": "Can't update product" + err.Error(),
+			"Error:": "Can't update user" + err.Error(),
 		})
 
 		return
 	}
 
-	ctx.JSON(200, product)
+	ctx.JSON(200, user)
 }
 
-func DeleteProducts(ctx *gin.Context) {
+func DeleteUser(ctx *gin.Context) {
 	id := ctx.Param("id")
 	parseId, err := strconv.Atoi(id)
 
-	product := &models.Products{}
+	user := &entity.User{}
 
 	if err != nil {
 		ctx.JSON(400, gin.H{
@@ -112,14 +115,14 @@ func DeleteProducts(ctx *gin.Context) {
 
 	db := database.GetDatabase()
 
-	err = db.Delete(product, parseId).Error
+	err = db.Delete(user, parseId).Error
 	if err != nil {
 		ctx.JSON(400, gin.H{
-			"Error:": "Can't update product" + err.Error(),
+			"Error:": "Can't update user" + err.Error(),
 		})
 
 		return
 	}
 
-	ctx.JSON(200, product)
+	ctx.JSON(200, user)
 }

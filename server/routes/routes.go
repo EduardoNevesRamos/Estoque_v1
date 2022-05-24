@@ -1,33 +1,40 @@
 package routes
 
 import (
-	controllers "github.com/DuduNeves/Estoque_v1/controller"
+	"github.com/DuduNeves/Estoque_v1/core/login"
+	"github.com/DuduNeves/Estoque_v1/core/product"
+	"github.com/DuduNeves/Estoque_v1/core/user"
 	"github.com/DuduNeves/Estoque_v1/server/middlewares"
+	"github.com/DuduNeves/Estoque_v1/server/routes/dependency"
 	"github.com/gin-gonic/gin"
 )
 
 func ConfigRoutes(router *gin.Engine) *gin.Engine {
 	main := router.Group("api/v1")
+	productsControllerWithDependencies := dependency.Products()
+
 	{
 		products := main.Group("products", middlewares.Auth())
 		{
-			products.GET("/", controllers.GetAllProducts)
-			products.GET("/:id", controllers.GetProduct)
-			products.POST("/", controllers.CreateProducts)
-			products.PUT("/:id", controllers.UpdateProducts)
-			products.DELETE("/:id", controllers.DeleteProducts)
+			products.GET("/", productsControllerWithDependencies.GetAllProducts)
+			products.GET("/:id", productsControllerWithDependencies.GetProduct)
+			products.POST("/", productsControllerWithDependencies.CreateProducts)
+			products.PUT("/:id", productsControllerWithDependencies.UpdateProducts)
+			products.DELETE("/:id", product.DeleteProducts)
 		}
 
-		user := main.Group("user")
+		users := main.Group("user")
 		{
-			user.GET("/", controllers.GetAllUsers)
-			user.GET("/id", controllers.GetUser)
-			user.POST("/", controllers.CreateUser)
+			users.GET("/", user.GetAllUsers)
+			users.GET("/id", user.GetUser)
+			users.POST("/", user.CreateUser)
+			users.PUT("/:id", user.UpdateUser)
+			users.DELETE("/:id", user.DeleteUser)
 		}
 
-		login := main.Group("login")
+		Login := main.Group("login")
 		{
-			login.POST("/", controllers.Login)
+			Login.POST("/", login.Login)
 		}
 	}
 

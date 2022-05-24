@@ -1,4 +1,4 @@
-package models
+package entity
 
 import "gorm.io/gorm"
 
@@ -7,4 +7,8 @@ type User struct {
 	Name     string `json:"name"`
 	Password string `json:"password"`
 	Email    string `json:"email"`
+}
+
+func (User) TableName() string {
+	return "User"
 }

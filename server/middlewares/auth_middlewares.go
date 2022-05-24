@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"github.com/DuduNeves/Estoque_v1/service"
+	"github.com/DuduNeves/Estoque_v1/util/authorization"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,7 +15,7 @@ func Auth() gin.HandlerFunc {
 
 		token := header[len(Bearer_schena):]
 
-		if !service.NewJWTService().ValidateToken(token) {
+		if !authorization.NewJWTService().ValidateToken(token) {
 			ctx.AbortWithStatus(401)
 		}
 	}
