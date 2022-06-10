@@ -2,7 +2,6 @@ package routes
 
 import (
 	"github.com/DuduNeves/Estoque_v1/core/login"
-	"github.com/DuduNeves/Estoque_v1/core/product"
 	"github.com/DuduNeves/Estoque_v1/core/user"
 	"github.com/DuduNeves/Estoque_v1/server/middlewares"
 	"github.com/DuduNeves/Estoque_v1/server/routes/dependency"
@@ -20,7 +19,7 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 			products.GET("/:id", productsControllerWithDependencies.GetProduct)
 			products.POST("/", productsControllerWithDependencies.CreateProducts)
 			products.PUT("/:id", productsControllerWithDependencies.UpdateProducts)
-			products.DELETE("/:id", product.DeleteProducts)
+			products.DELETE("/:id", productsControllerWithDependencies.DeleteProducts)
 		}
 
 		users := main.Group("user")

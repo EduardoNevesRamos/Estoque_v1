@@ -9,6 +9,7 @@ type IProductsService interface {
 	GetProduct(productId uint64) (*entity.Products, error)
 	CreateProducts(product *entity.Products) error
 	UpdateProducts(product *entity.Products) error
+	DeleteProducts(id *int, product *entity.Products) error
 }
 
 type ProductsService struct {
@@ -49,4 +50,8 @@ func (s *ProductsService) CreateProducts(product *entity.Products) error {
 
 func (s *ProductsService) UpdateProducts(product *entity.Products) error {
 	return s.repository.UpdateProducts(product)
+}
+
+func (s *ProductsService) DeleteProducts(id *int, product *entity.Products) error {
+	return s.repository.DeleteProducts(id, product)
 }

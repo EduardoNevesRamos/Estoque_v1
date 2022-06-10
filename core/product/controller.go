@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/DuduNeves/Estoque_v1/database"
 	"github.com/DuduNeves/Estoque_v1/database/entity"
 	"github.com/gin-gonic/gin"
 )
@@ -100,28 +99,27 @@ func (c *ProductsController) UpdateProducts(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, req)
 }
 
-func DeleteProducts(ctx *gin.Context) {
+func (c *ProductsController) DeleteProducts(ctx *gin.Context) {
 	id := ctx.Param("id")
 	parseId, err := strconv.Atoi(id)
 
-	product := &entity.Products{}
-
 	if err != nil {
 		ctx.JSON(400, gin.H{
-			"Error:": "Can't bind JSON" + err.Error(),
-		})
-	}
-
-	db := database.GetDatabase()
-
-	err = db.Delete(product, parseId).Error
-	if err != nil {
-		ctx.JSON(400, gin.H{
-			"Error:": "Can't update product" + err.Error(),
+			"error": "ID has to be integer",
 		})
 
 		return
 	}
 
-	ctx.JSON(200, product)
+	product := entity.Products{}
+
+	err = c.service.DeleteProducts(&parseId, &product)
+	if err != nil {
+		ctx.JSON(400, gin.H{
+			"Error:": "Can't delete product " + err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(200, parseId)
 }

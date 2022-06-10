@@ -1,6 +1,0 @@
-make --dry-run --always-make --keep-going --print-directory
-make: Entering directory '/home/eduardo.ramos/Desktop/Projetos_golang_aprendizado/Sistema-estoque'
-make: Leaving directory '/home/eduardo.ramos/Desktop/Projetos_golang_aprendizado/Sistema-estoque'
- 
-make: *** No targets specified and no makefile found.  Stop.
-

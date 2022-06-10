@@ -12,6 +12,7 @@ type IProductsRepository interface {
 	GetProduct(productId uint64) (*entity.Products, error)
 	CreateProducts(product *entity.Products) error
 	UpdateProducts(product *entity.Products) error
+	DeleteProducts(id *int, product *entity.Products) error
 }
 
 type ProductsRepository struct {
@@ -52,4 +53,8 @@ func (r *ProductsRepository) CreateProducts(product *entity.Products) error {
 
 func (r *ProductsRepository) UpdateProducts(product *entity.Products) error {
 	return r.db.Where(&product.ID).Save(&product).Error
+}
+
+func (r *ProductsRepository) DeleteProducts(id *int, product *entity.Products) error {
+	return r.db.Where(&id).Delete(&product).Error
 }
