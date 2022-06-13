@@ -32,7 +32,7 @@ func (c *ProductsController) GetProduct(ctx *gin.Context) {
 	customer, err := c.service.GetProduct(uint64(parseId))
 
 	if err != nil {
-		ctx.JSON(400, gin.H{
+		ctx.JSON(500, gin.H{
 			"Error:": "Can't find a product" + err.Error(),
 		})
 		return
@@ -67,7 +67,7 @@ func (c *ProductsController) CreateProducts(ctx *gin.Context) {
 
 	err := c.service.CreateProducts(&newProducts)
 	if err != nil {
-		ctx.JSON(400, gin.H{
+		ctx.JSON(500, gin.H{
 			"Error:": "Can't create product" + err.Error(),
 		})
 
@@ -89,7 +89,7 @@ func (c *ProductsController) UpdateProducts(ctx *gin.Context) {
 
 	err = c.service.UpdateProducts(req)
 	if err != nil {
-		ctx.JSON(400, gin.H{
+		ctx.JSON(500, gin.H{
 			"Error:": "Can't update product" + err.Error(),
 		})
 
@@ -115,7 +115,7 @@ func (c *ProductsController) DeleteProducts(ctx *gin.Context) {
 
 	err = c.service.DeleteProducts(&parseId, &product)
 	if err != nil {
-		ctx.JSON(400, gin.H{
+		ctx.JSON(500, gin.H{
 			"Error:": "Can't delete product " + err.Error(),
 		})
 		return

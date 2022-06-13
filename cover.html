@@ -1,0 +1,353 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>product: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/DuduNeves/Estoque_v1/core/product/controller.go (100.0%)</option>
+				
+				<option value="file1">github.com/DuduNeves/Estoque_v1/core/product/repository.go (0.0%)</option>
+				
+				<option value="file2">github.com/DuduNeves/Estoque_v1/core/product/service.go (0.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package product
+
+import (
+        "net/http"
+        "strconv"
+
+        "github.com/DuduNeves/Estoque_v1/database/entity"
+        "github.com/gin-gonic/gin"
+)
+
+type ProductsController struct {
+        service IProductsService
+}
+
+func NewProductsController(service IProductsService) ProductsController <span class="cov8" title="1">{
+        return ProductsController{
+                service: service,
+        }
+}</span>
+
+func (c *ProductsController) GetProduct(ctx *gin.Context) <span class="cov8" title="1">{
+        id := ctx.Param("id")
+        parseId, err := strconv.Atoi(id)
+
+        if err != nil </span><span class="cov8" title="1">{
+                ctx.JSON(400, gin.H{
+                        "Error:": "ID has to be integer",
+                })
+                return
+        }</span>
+
+        <span class="cov8" title="1">customer, err := c.service.GetProduct(uint64(parseId))
+
+        if err != nil </span><span class="cov8" title="1">{
+                ctx.JSON(500, gin.H{
+                        "Error:": "Can't find a product" + err.Error(),
+                })
+                return
+        }</span>
+
+        <span class="cov8" title="1">ctx.JSON(200, customer)</span>
+}
+
+func (c *ProductsController) GetAllProducts(ctx *gin.Context) <span class="cov8" title="1">{
+
+        productsEntity, err := c.service.GetAllProducts()
+
+        if err != nil </span><span class="cov8" title="1">{
+                ctx.JSON(400, gin.H{
+                        "Error:": "Can't find products: " + err.Error(),
+                })
+
+                return
+        }</span>
+
+        <span class="cov8" title="1">ctx.JSON(http.StatusOK, productsEntity)</span>
+}
+
+func (c *ProductsController) CreateProducts(ctx *gin.Context) <span class="cov8" title="1">{
+        newProducts := entity.Products{}
+        if err := ctx.ShouldBindJSON(&amp;newProducts); err != nil </span><span class="cov8" title="1">{
+                ctx.JSON(http.StatusBadRequest, gin.H{
+                        "error": err.Error(),
+                })
+                return
+        }</span>
+
+        <span class="cov8" title="1">err := c.service.CreateProducts(&amp;newProducts)
+        if err != nil </span><span class="cov8" title="1">{
+                ctx.JSON(500, gin.H{
+                        "Error:": "Can't create product" + err.Error(),
+                })
+
+                return
+        }</span>
+
+        <span class="cov8" title="1">ctx.JSON(200, newProducts)</span>
+}
+
+func (c *ProductsController) UpdateProducts(ctx *gin.Context) <span class="cov8" title="1">{
+        req := &amp;entity.Products{}
+        err := ctx.ShouldBindJSON(&amp;req)
+        if err != nil </span><span class="cov8" title="1">{
+                ctx.JSON(400, gin.H{
+                        "Error:": "Can't bind JSON" + err.Error(),
+                })
+                return
+        }</span>
+
+        <span class="cov8" title="1">err = c.service.UpdateProducts(req)
+        if err != nil </span><span class="cov8" title="1">{
+                ctx.JSON(500, gin.H{
+                        "Error:": "Can't update product" + err.Error(),
+                })
+
+                return
+        }</span>
+
+        <span class="cov8" title="1">ctx.JSON(http.StatusCreated, req)</span>
+}
+
+func (c *ProductsController) DeleteProducts(ctx *gin.Context) <span class="cov8" title="1">{
+        id := ctx.Param("id")
+        parseId, err := strconv.Atoi(id)
+
+        if err != nil </span><span class="cov8" title="1">{
+                ctx.JSON(400, gin.H{
+                        "error": "ID has to be integer",
+                })
+
+                return
+        }</span>
+
+        <span class="cov8" title="1">product := entity.Products{}
+
+        err = c.service.DeleteProducts(&amp;parseId, &amp;product)
+        if err != nil </span><span class="cov8" title="1">{
+                ctx.JSON(500, gin.H{
+                        "Error:": "Can't delete product " + err.Error(),
+                })
+                return
+        }</span>
+
+        <span class="cov8" title="1">ctx.JSON(200, parseId)</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package product
+
+import (
+        "fmt"
+
+        "github.com/DuduNeves/Estoque_v1/database/entity"
+        "gorm.io/gorm"
+)
+
+type IProductsRepository interface {
+        GetAllProducts() ([]entity.Products, error)
+        GetProduct(productId uint64) (*entity.Products, error)
+        CreateProducts(product *entity.Products) error
+        UpdateProducts(product *entity.Products) error
+        DeleteProducts(id *int, product *entity.Products) error
+}
+
+type ProductsRepository struct {
+        db *gorm.DB
+}
+
+func NewProductsRepository(db *gorm.DB) IProductsRepository <span class="cov0" title="0">{
+        return &amp;ProductsRepository{
+                db: db,
+        }
+}</span>
+
+func (r *ProductsRepository) GetAllProducts() ([]entity.Products, error) <span class="cov0" title="0">{
+        var Products []entity.Products
+
+        err := r.db.Find(&amp;Products).Error
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("cannot find products: %v", err)
+        }</span>
+        <span class="cov0" title="0">return Products, err</span>
+}
+
+func (r *ProductsRepository) GetProduct(productId uint64) (*entity.Products, error) <span class="cov0" title="0">{
+        var product entity.Products
+
+        err := r.db.First(&amp;product, productId).Error
+        if err != nil </span><span class="cov0" title="0">{
+                return &amp;entity.Products{}, fmt.Errorf("cannot find products by id: %v", err)
+        }</span>
+
+        <span class="cov0" title="0">return &amp;product, err</span>
+}
+
+func (r *ProductsRepository) CreateProducts(product *entity.Products) error <span class="cov0" title="0">{
+        return r.db.Create(&amp;product).
+                Error
+}</span>
+
+func (r *ProductsRepository) UpdateProducts(product *entity.Products) error <span class="cov0" title="0">{
+        return r.db.Where(&amp;product.ID).Save(&amp;product).Error
+}</span>
+
+func (r *ProductsRepository) DeleteProducts(id *int, product *entity.Products) error <span class="cov0" title="0">{
+        return r.db.Where(&amp;id).Delete(&amp;product).Error
+}</span>
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package product
+
+import (
+        "github.com/DuduNeves/Estoque_v1/database/entity"
+)
+
+type IProductsService interface {
+        GetAllProducts() ([]entity.Products, error)
+        GetProduct(productId uint64) (*entity.Products, error)
+        CreateProducts(product *entity.Products) error
+        UpdateProducts(product *entity.Products) error
+        DeleteProducts(id *int, product *entity.Products) error
+}
+
+type ProductsService struct {
+        repository IProductsRepository
+}
+
+func NewProductsService(
+        repository IProductsRepository,
+) IProductsService <span class="cov0" title="0">{
+        return &amp;ProductsService{
+                repository: repository,
+        }
+}</span>
+
+func (s *ProductsService) GetProduct(productId uint64) (*entity.Products, error) <span class="cov0" title="0">{
+        product, err := s.repository.GetProduct(productId)
+
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">return product, nil</span>
+}
+
+func (s *ProductsService) GetAllProducts() ([]entity.Products, error) <span class="cov0" title="0">{
+        product, err := s.repository.GetAllProducts()
+
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">return product, nil</span>
+}
+
+func (s *ProductsService) CreateProducts(product *entity.Products) error <span class="cov0" title="0">{
+        return s.repository.CreateProducts(product)
+}</span>
+
+func (s *ProductsService) UpdateProducts(product *entity.Products) error <span class="cov0" title="0">{
+        return s.repository.UpdateProducts(product)
+}</span>
+
+func (s *ProductsService) DeleteProducts(id *int, product *entity.Products) error <span class="cov0" title="0">{
+        return s.repository.DeleteProducts(id, product)
+}</span>
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
